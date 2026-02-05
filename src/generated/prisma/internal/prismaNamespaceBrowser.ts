@@ -52,14 +52,11 @@ export const AnyNull = runtime.AnyNull
 
 export const ModelName = {
   User: 'User',
-  ProviderProfile: 'ProviderProfile',
+  Provider: 'Provider',
   Category: 'Category',
   Meal: 'Meal',
   Order: 'Order',
-  OrderItem: 'OrderItem',
-  CartItem: 'CartItem',
-  Review: 'Review',
-  Address: 'Address'
+  Review: 'Review'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -82,10 +79,10 @@ export const UserScalarFieldEnum = {
   id: 'id',
   email: 'email',
   password: 'password',
+  name: 'name',
   role: 'role',
-  fullName: 'fullName',
   phone: 'phone',
-  isActive: 'isActive',
+  address: 'address',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -93,35 +90,25 @@ export const UserScalarFieldEnum = {
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
 
 
-export const ProviderProfileScalarFieldEnum = {
+export const ProviderScalarFieldEnum = {
   id: 'id',
-  userId: 'userId',
-  restaurantName: 'restaurantName',
+  name: 'name',
   description: 'description',
   cuisineType: 'cuisineType',
   address: 'address',
-  city: 'city',
-  state: 'state',
-  zipCode: 'zipCode',
   phone: 'phone',
-  openingHours: 'openingHours',
-  deliveryRadius: 'deliveryRadius',
-  isApproved: 'isApproved',
-  rating: 'rating',
-  totalReviews: 'totalReviews',
+  isActive: 'isActive',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  userId: 'userId'
 } as const
 
-export type ProviderProfileScalarFieldEnum = (typeof ProviderProfileScalarFieldEnum)[keyof typeof ProviderProfileScalarFieldEnum]
+export type ProviderScalarFieldEnum = (typeof ProviderScalarFieldEnum)[keyof typeof ProviderScalarFieldEnum]
 
 
 export const CategoryScalarFieldEnum = {
   id: 'id',
   name: 'name',
   description: 'description',
-  imageUrl: 'imageUrl',
-  isActive: 'isActive',
   createdAt: 'createdAt'
 } as const
 
@@ -130,19 +117,16 @@ export type CategoryScalarFieldEnum = (typeof CategoryScalarFieldEnum)[keyof typ
 
 export const MealScalarFieldEnum = {
   id: 'id',
-  providerId: 'providerId',
-  categoryId: 'categoryId',
   name: 'name',
   description: 'description',
   price: 'price',
-  image_url: 'image_url',
-  dietary_tags: 'dietary_tags',
-  preparationTime: 'preparationTime',
+  imageUrl: 'imageUrl',
   isAvailable: 'isAvailable',
-  rating: 'rating',
-  totalReviews: 'totalReviews',
+  dietaryInfo: 'dietaryInfo',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  providerId: 'providerId',
+  categoryId: 'categoryId'
 } as const
 
 export type MealScalarFieldEnum = (typeof MealScalarFieldEnum)[keyof typeof MealScalarFieldEnum]
@@ -150,82 +134,31 @@ export type MealScalarFieldEnum = (typeof MealScalarFieldEnum)[keyof typeof Meal
 
 export const OrderScalarFieldEnum = {
   id: 'id',
-  orderNumber: 'orderNumber',
-  customerId: 'customerId',
-  providerId: 'providerId',
+  status: 'status',
   totalAmount: 'totalAmount',
   deliveryAddress: 'deliveryAddress',
-  deliveryCity: 'deliveryCity',
-  deliveryPhone: 'deliveryPhone',
-  status: 'status',
+  customerNotes: 'customerNotes',
   paymentMethod: 'paymentMethod',
-  paymentStatus: 'paymentStatus',
-  notes: 'notes',
+  placedAt: 'placedAt',
   deliveredAt: 'deliveredAt',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  mealItems: 'mealItems',
+  customerId: 'customerId',
+  providerId: 'providerId'
 } as const
 
 export type OrderScalarFieldEnum = (typeof OrderScalarFieldEnum)[keyof typeof OrderScalarFieldEnum]
 
 
-export const OrderItemScalarFieldEnum = {
-  id: 'id',
-  orderId: 'orderId',
-  mealId: 'mealId',
-  quantity: 'quantity',
-  unitPrice: 'unitPrice',
-  subtotal: 'subtotal',
-  createdAt: 'createdAt'
-} as const
-
-export type OrderItemScalarFieldEnum = (typeof OrderItemScalarFieldEnum)[keyof typeof OrderItemScalarFieldEnum]
-
-
-export const CartItemScalarFieldEnum = {
-  id: 'id',
-  customerId: 'customerId',
-  mealId: 'mealId',
-  quantity: 'quantity',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-} as const
-
-export type CartItemScalarFieldEnum = (typeof CartItemScalarFieldEnum)[keyof typeof CartItemScalarFieldEnum]
-
-
 export const ReviewScalarFieldEnum = {
   id: 'id',
-  customerId: 'customerId',
-  mealId: 'mealId',
-  orderId: 'orderId',
   rating: 'rating',
   comment: 'comment',
-  imageUrl: 'imageUrl',
-  isApproved: 'isApproved',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  customerId: 'customerId',
+  mealId: 'mealId'
 } as const
 
 export type ReviewScalarFieldEnum = (typeof ReviewScalarFieldEnum)[keyof typeof ReviewScalarFieldEnum]
-
-
-export const AddressScalarFieldEnum = {
-  id: 'id',
-  customerId: 'customerId',
-  addressType: 'addressType',
-  addressLine1: 'addressLine1',
-  addressLine2: 'addressLine2',
-  city: 'city',
-  state: 'state',
-  zipCode: 'zipCode',
-  phone: 'phone',
-  isDefault: 'isDefault',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-} as const
-
-export type AddressScalarFieldEnum = (typeof AddressScalarFieldEnum)[keyof typeof AddressScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -234,6 +167,13 @@ export const SortOrder = {
 } as const
 
 export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
+
+
+export const JsonNullValueInput = {
+  JsonNull: JsonNull
+} as const
+
+export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput]
 
 
 export const QueryMode = {
@@ -250,4 +190,13 @@ export const NullsOrder = {
 } as const
 
 export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
+
+
+export const JsonNullValueFilter = {
+  DbNull: DbNull,
+  JsonNull: JsonNull,
+  AnyNull: AnyNull
+} as const
+
+export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
 

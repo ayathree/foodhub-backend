@@ -45,10 +45,10 @@ export { Prisma }
  */
 export type User = Prisma.UserModel
 /**
- * Model ProviderProfile
+ * Model Provider
  * 
  */
-export type ProviderProfile = Prisma.ProviderProfileModel
+export type Provider = Prisma.ProviderModel
 /**
  * Model Category
  * 
@@ -65,22 +65,7 @@ export type Meal = Prisma.MealModel
  */
 export type Order = Prisma.OrderModel
 /**
- * Model OrderItem
- * 
- */
-export type OrderItem = Prisma.OrderItemModel
-/**
- * Model CartItem
- * 
- */
-export type CartItem = Prisma.CartItemModel
-/**
  * Model Review
  * 
  */
 export type Review = Prisma.ReviewModel
-/**
- * Model Address
- * 
- */
-export type Address = Prisma.AddressModel

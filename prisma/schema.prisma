@@ -13,86 +13,52 @@ datasource db {
   provider = "postgresql"
 }
 
-enum UserRole {
+enum Role {
   CUSTOMER
   PROVIDER
   ADMIN
 }
 
-enum DietTag {
-  VEGETARIAN
-  VEGAN
-  GLUTEN_FREE
-  DAIRY_FREE
-  NUT_FREE
-  KETO
-}
-
 enum OrderStatus {
-  PENDING
-  CONFIRMED
+  PLACED
   PREPARING
-  OUT_FOR_DELIVERY
+  READY
   DELIVERED
   CANCELLED
-}
-
-enum PaymentMethod {
-  COD
-  ONLINE
-}
-
-enum PaymentStatus {
-  PENDING
-  COMPLETED
-  FAILED
-  REFUNDED
-}
-
-enum AddressType {
-  HOME
-  WORK
-  OTHER
 }
 
 model User {
   id        String   @id @default(uuid())
   email     String   @unique
   password  String
-  role      UserRole @default(CUSTOMER)
-  fullName  String
+  name      String
+  role      Role     @default(CUSTOMER)
   phone     String?
-  isActive  Boolean  @default(true)
+  address   String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  providerProfile ProviderProfile[]
-  orders          Order[]
-  cartItems       CartItem[]
-  reviews         Review[]
-  addresses       Address[]
+  // Relations
+
+  provider Provider[]
+  orders   Order[]
+  reviews  Review[]
 }
 
-model ProviderProfile {
-  id             String   @id @default(uuid())
-  userId         String   @unique
-  restaurantName String
-  description    String?
-  cuisineType    String?
-  address        String
-  city           String?
-  state          String?
-  zipCode        String?
-  phone          String?
-  openingHours   String?
-  deliveryRadius Int?
-  isApproved     Boolean  @default(false)
-  rating         Float?   @default(0.0)
-  totalReviews   Int      @default(0)
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
+model Provider {
+  id          String   @id @default(uuid())
+  userId      String   @unique
+  name        String
+  description String?
+  cuisineType String?
+  address     String
+  phone       String
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
 
-  user   User    @relation(fields: [userId], references: [id])
+  // Relations
+  user User @relation(fields: [userId], references: [id])
+
   meals  Meal[]
   orders Order[]
 }
@@ -101,122 +67,64 @@ model Category {
   id          String   @id @default(uuid())
   name        String   @unique
   description String?
-  imageUrl    String?
-  isActive    Boolean  @default(true)
   createdAt   DateTime @default(now())
-  meals       Meal[]
+
+  // Relations
+
+  meals Meal[]
 }
 
 model Meal {
-  id              String    @id @default(uuid())
-  providerId      String
-  categoryId      String?
-  name            String
-  description     String?
-  price           Float
-  image_url       String?
-  dietary_tags    DietTag[]
-  preparationTime Int?
-  isAvailable     Boolean   @default(true)
-  rating          Float?    @default(0.00)
-  totalReviews    Int       @default(0)
-  createdAt       DateTime  @default(now())
-  updatedAt       DateTime  @updatedAt
+  id          String   @id @default(uuid())
+  providerId  String
+  categoryId  String?
+  name        String
+  description String?
+  price       Float
+  imageUrl    String?
+  isAvailable Boolean  @default(true)
+  dietaryInfo String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
-  provider ProviderProfile @relation(fields: [providerId], references: [id])
+  // Relations
+  provider Provider  @relation(fields: [providerId], references: [id])
+  category Category? @relation(fields: [categoryId], references: [id])
 
-  category   Category?   @relation(fields: [categoryId], references: [id])
-  orderItems OrderItem[]
-  cartItems  CartItem[]
-  reviews    Review[]
+  reviews Review[]
 }
 
 model Order {
-  id              String        @id @default(uuid())
-  orderNumber     String        @unique
+  id              String      @id @default(uuid())
+  providerId      String?
   customerId      String
-  providerId      String
+  status          OrderStatus @default(PLACED)
   totalAmount     Float
   deliveryAddress String
-  deliveryCity    String?
-  deliveryPhone   String
-  status          OrderStatus   @default(PENDING)
-  paymentMethod   PaymentMethod @default(COD)
-  paymentStatus   PaymentStatus @default(PENDING)
-  notes           String?
+  customerNotes   String?
+  paymentMethod   String      @default("CASH_ON_DELIVERY")
+  placedAt        DateTime    @default(now())
   deliveredAt     DateTime?
-  createdAt       DateTime      @default(now())
-  updatedAt       DateTime      @default(now()) @updatedAt
 
-  // Relationships
-  customer   User            @relation(fields: [customerId], references: [id])
-  provider   ProviderProfile @relation(fields: [providerId], references: [id])
-  orderItems OrderItem[]
-  reviews    Review[]
-}
+  // Store multiple meals in an order as JSON
+  mealItems Json // Array of {mealId, mealName, quantity, unitPrice, subtotal}
 
-model OrderItem {
-  id        String   @id @default(uuid())
-  orderId   String
-  mealId    String
-  quantity  Int
-  unitPrice Float
-  subtotal  Float
-  createdAt DateTime @default(now())
-
-  // Relationships
-  order Order @relation(fields: [orderId], references: [id])
-  meal  Meal  @relation(fields: [mealId], references: [id])
-}
-
-model CartItem {
-  id         String   @id @default(uuid())
-  customerId String
-  mealId     String
-  quantity   Int      @default(1)
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @default(now()) @updatedAt
-
-  // Relationships
-  customer User @relation(fields: [customerId], references: [id])
-  meal     Meal @relation(fields: [mealId], references: [id])
-
-  @@unique([customerId, mealId]) // One cart item per meal per user
+  // Relations
+  customer User      @relation(fields: [customerId], references: [id])
+  provider Provider? @relation(fields: [providerId], references: [id])
 }
 
 model Review {
   id         String   @id @default(uuid())
   customerId String
   mealId     String
-  orderId    String
-  rating     Int // 1-5 stars
+  rating     Int // 1-5 scale
   comment    String?
-  imageUrl   String?
-  isApproved Boolean  @default(true)
   createdAt  DateTime @default(now())
-  updatedAt  DateTime @default(now()) @updatedAt
 
-  // Relationships
-  customer User  @relation(fields: [customerId], references: [id])
-  meal     Meal  @relation(fields: [mealId], references: [id])
-  order    Order @relation(fields: [orderId], references: [id])
-
-  @@unique([customerId, mealId, orderId]) // One review per meal per order
-}
-
-model Address {
-  id           String      @id @default(uuid())
-  customerId   String
-  addressType  AddressType @default(HOME) // ✅ Type-safe!
-  addressLine1 String
-  addressLine2 String?
-  city         String
-  state        String
-  zipCode      String
-  phone        String?
-  isDefault    Boolean     @default(false)
-  createdAt    DateTime    @default(now())
-  updatedAt    DateTime    @default(now()) @updatedAt
-
+  // Relations
   customer User @relation(fields: [customerId], references: [id])
+  meal     Meal @relation(fields: [mealId], references: [id])
+
+  @@unique([customerId, mealId])
 }
