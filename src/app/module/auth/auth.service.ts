@@ -30,23 +30,33 @@ const registerUser = async (payload: IRegisterPaylod) => {
         throw new Error("Failed to register")
     }
 
-    if (data.user.role === "PROVIDER") {
-        const provider = await prisma.$transaction(async (tx) => {
-            const providerTx = await tx.provider.create({
-                data: {
-                    userId: data.user.id,
-                    name: payload.name,
+    try {
+        if (data.user.role === "PROVIDER") {
+            const provider = await prisma.$transaction(async (tx) => {
+                const providerTx = await tx.provider.create({
+                    data: {
+                        userId: data.user.id,
+                        name: payload.name,
 
 
-                }
+                    }
+                })
+
+                return providerTx
             })
+            return { ...data, provider }
+        }
 
-            return providerTx
+        return { ...data }
+    } catch (error) {
+        console.log("transaction error: ", error)
+        await prisma.user.delete({
+            where: {
+                id: data.user.id
+            }
         })
-        return { ...data, provider }
+        throw error;
     }
-
-    return { ...data }
 
 }
 

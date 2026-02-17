@@ -1,6 +1,8 @@
 import express, { Application, Request, Response } from "express";
 
 import { AuthRoute } from "./app/module/auth/auth.route";
+import { globalErrorHandler } from "./app/middleware/globalErrorHandler";
+import { notFound } from "./app/middleware/notFound";
 
 const app: Application = express();
 
@@ -26,5 +28,8 @@ app.use('/api/auth', AuthRoute)
 //         data: user
 //     })
 // });
+
+app.use(globalErrorHandler)
+app.use(notFound)
 
 export default app;
