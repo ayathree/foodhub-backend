@@ -37,3 +37,8 @@ export type Account = Prisma.AccountModel
  * 
  */
 export type Verification = Prisma.VerificationModel
+/**
+ * Model Provider
+ * 
+ */
+export type Provider = Prisma.ProviderModel

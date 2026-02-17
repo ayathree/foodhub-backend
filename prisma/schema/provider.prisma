@@ -1,0 +1,13 @@
+model Provider {
+    id          String   @id @default(uuid())
+    userId      String   @unique
+    name        String
+    description String?
+    cuisineType String?
+    address     String?
+    phone       String?
+    isActive    Boolean  @default(true)
+    createdAt   DateTime @default(now())
+
+    user User @relation(fields: [userId], references: [id])
+}

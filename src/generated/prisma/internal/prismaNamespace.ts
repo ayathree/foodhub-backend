@@ -387,7 +387,8 @@ export const ModelName = {
   User: 'User',
   Session: 'Session',
   Account: 'Account',
-  Verification: 'Verification'
+  Verification: 'Verification',
+  Provider: 'Provider'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -403,7 +404,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "session" | "account" | "verification"
+    modelProps: "user" | "session" | "account" | "verification" | "provider"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -703,6 +704,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    Provider: {
+      payload: Prisma.$ProviderPayload<ExtArgs>
+      fields: Prisma.ProviderFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ProviderFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProviderPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ProviderFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProviderPayload>
+        }
+        findFirst: {
+          args: Prisma.ProviderFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProviderPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ProviderFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProviderPayload>
+        }
+        findMany: {
+          args: Prisma.ProviderFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProviderPayload>[]
+        }
+        create: {
+          args: Prisma.ProviderCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProviderPayload>
+        }
+        createMany: {
+          args: Prisma.ProviderCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.ProviderCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProviderPayload>[]
+        }
+        delete: {
+          args: Prisma.ProviderDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProviderPayload>
+        }
+        update: {
+          args: Prisma.ProviderUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProviderPayload>
+        }
+        deleteMany: {
+          args: Prisma.ProviderDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ProviderUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.ProviderUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProviderPayload>[]
+        }
+        upsert: {
+          args: Prisma.ProviderUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProviderPayload>
+        }
+        aggregate: {
+          args: Prisma.ProviderAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateProvider>
+        }
+        groupBy: {
+          args: Prisma.ProviderGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ProviderGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ProviderCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ProviderCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -801,6 +876,21 @@ export const VerificationScalarFieldEnum = {
 } as const
 
 export type VerificationScalarFieldEnum = (typeof VerificationScalarFieldEnum)[keyof typeof VerificationScalarFieldEnum]
+
+
+export const ProviderScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  name: 'name',
+  description: 'description',
+  cuisineType: 'cuisineType',
+  address: 'address',
+  phone: 'phone',
+  isActive: 'isActive',
+  createdAt: 'createdAt'
+} as const
+
+export type ProviderScalarFieldEnum = (typeof ProviderScalarFieldEnum)[keyof typeof ProviderScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -994,6 +1084,7 @@ export type GlobalOmitConfig = {
   session?: Prisma.SessionOmit
   account?: Prisma.AccountOmit
   verification?: Prisma.VerificationOmit
+  provider?: Prisma.ProviderOmit
 }
 
 /* Types for Logging */
