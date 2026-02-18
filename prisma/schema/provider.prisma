@@ -1,13 +1,16 @@
 model Provider {
     id          String   @id @default(uuid())
-    userId      String   @unique
+    userId      String   @unique @map("user_id")
     name        String
     description String?
-    cuisineType String?
+    cuisineType String?  @map("cuisine_type")
     address     String?
     phone       String?
-    isActive    Boolean  @default(true)
-    createdAt   DateTime @default(now())
+    isActive    Boolean  @default(true) @map("is_active")
+    createdAt   DateTime @default(now()) @map("created_at")
 
     user User @relation(fields: [userId], references: [id])
+
+    @@index([userId])
+    @@map("providers")
 }

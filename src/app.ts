@@ -3,6 +3,8 @@ import express, { Application, Request, Response } from "express";
 import { AuthRoute } from "./app/module/auth/auth.route";
 import { globalErrorHandler } from "./app/middleware/globalErrorHandler";
 import { notFound } from "./app/middleware/notFound";
+import { categoryRoutes } from "./app/module/category/category.route";
+
 
 const app: Application = express();
 
@@ -13,6 +15,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 app.use('/api/auth', AuthRoute)
+app.use('/api/categories', categoryRoutes)
 
 // Basic route
 // app.get('/', async (req: Request, res: Response) => {
