@@ -1,6 +1,7 @@
 import { User } from "../../../generated/prisma/client";
 import { auth } from "../../lib/auth";
 import { prisma } from "../../lib/prisma";
+import { tokenUtils } from "../../utils/token";
 
 interface IRegisterPaylod {
     name: string;
@@ -69,8 +70,24 @@ const loginUser = async (payload: ILoginUserPayload) => {
             password
         }
     })
-    return data
 
+    const accessToken = tokenUtils.getAccessTokenSecret({
+        userId: data.user.id,
+        role: data.user.role,
+        name: data.user.name,
+        email: data.user.email,
+        emailVerified: data.user.emailVerified
+
+    })
+
+    const refreshToken = tokenUtils.getRefreshTokenSecret({
+        userId: data.user.id,
+        role: data.user.role,
+        name: data.user.name,
+        email: data.user.email,
+        emailVerified: data.user.emailVerified
+    })
+    return { ...data, accessToken, refreshToken }
 }
 
 export const AuthService = {
