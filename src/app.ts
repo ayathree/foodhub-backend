@@ -4,6 +4,7 @@ import { AuthRoute } from "./app/module/auth/auth.route";
 import { globalErrorHandler } from "./app/middleware/globalErrorHandler";
 import { notFound } from "./app/middleware/notFound";
 import { categoryRoutes } from "./app/module/category/category.route";
+import cookieParser from "cookie-parser";
 
 
 const app: Application = express();
@@ -13,6 +14,7 @@ app.use(express.urlencoded({ extended: true }));
 
 // Middleware to parse JSON bodies
 app.use(express.json());
+app.use(cookieParser())
 
 app.use('/api/auth', AuthRoute)
 app.use('/api/categories', categoryRoutes)
